@@ -81,15 +81,12 @@ class LeagueService {
                                         return match.homeTeam === team ||
                                                match.awayTeam === team
                                     })
-                console.log('matches list: ', matchesList)
                 // MP
                 let matchesPlayed = matchesList.length
                 
                 // GF
                 let goalsFor = matchesList.reduce((accumulator, currVal) => {
-                    console.log(team, ' gf accumulator: ', accumulator)
-                    console.log(team, ' goals for:', currVal)
-
+              
                     if(team === currVal.homeTeam && currVal.homeTeamScore >= currVal.awayTeamScore) {
                         return parseInt(accumulator + currVal.homeTeamScore)
                     }
@@ -99,13 +96,10 @@ class LeagueService {
 
                     return accumulator
                 }, 0)
-                console.log(team, ' goals for:', goalsFor)
 
                 // GA
                 let goalsAgainst = matchesList.reduce((accumulator, currVal) => {
-                    console.log(team, ' ga accumulator: ', accumulator)
-                    console.log(team, ' goals against:', currVal)
-
+         
                     if(team === currVal.homeTeam && currVal.homeTeamScore <= currVal.awayTeamScore) {
                         return parseInt(accumulator + currVal.homeTeamScore)
                     }
@@ -115,7 +109,6 @@ class LeagueService {
 
                     return accumulator
                 }, 0)
-                console.log(team, ' goals against:', goalsAgainst)
 
                 // GD
                 //let goalDifference = Math.abs(goalsFor - goalsAgainst)
@@ -148,7 +141,6 @@ class LeagueService {
     
     getTeams() {
         let allTeams = this.matches.map((match) => [match.homeTeam, match.awayTeam])
-        console.log(allTeams)
         return Array.from(new Set(allTeams.flatMap(teams => teams)))
     }
 

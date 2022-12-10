@@ -11,6 +11,10 @@ const ScheduleComponent = (props) => {
         if(idx === 1) return 'fw-medium d-none d-lg-table-cell'
     }
 
+    const parseDateFormat = (dateString) => {
+        return `${new Date(dateString).toLocaleString()}`
+    }
+
     return (
         <Container className='mt-lg-5 mt-sm-2 mx-md-10 mx-sm-auto'>
             <Row className='mb-4'>
@@ -36,7 +40,7 @@ const ScheduleComponent = (props) => {
                                     <tr key={index} style={{ height: '70px' }} className={ index % 2 === 0 ? 'bg-white' : 'bg-light' }
                                     >
                                         <td className='d-none d-sm-table-cell align-middle'>
-                                            <span className='fs-10 text-start'>{ new Date(row.matchDate).toUTCString() }</span>
+                                            <span className='fs-10 text-start'>{ parseDateFormat(row.matchDate) }</span>
                                         </td>
                                         <td className='d-none d-lg-table-cell align-middle'>
                                             <span className='fs-10 text-start'>{ row.stadium }</span>
