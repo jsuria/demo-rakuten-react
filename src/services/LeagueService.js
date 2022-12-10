@@ -8,7 +8,7 @@
  */
 
 import axios from "axios";
-import { API_ALL_MATCHES, API_AUTH_TOKEN } from "../config/api";
+import { API_ALL_MATCHES, API_AUTH_TOKEN, API_VERSION } from "../config/api";
 
 class LeagueService {    
     
@@ -17,6 +17,7 @@ class LeagueService {
         this.teams = []
         this.apiMatches = API_ALL_MATCHES
         this.apiToken = API_AUTH_TOKEN
+        this.apiVersion = API_VERSION
     }
 
     /**
@@ -80,34 +81,40 @@ class LeagueService {
                                         return match.homeTeam === team ||
                                                match.awayTeam === team
                                     })
+                console.log('matches list: ', matchesList)
                 // MP
                 let matchesPlayed = matchesList.length
                 
                 // GF
                 let goalsFor = matchesList.reduce((accumulator, currVal) => {
-                    console.log('accumulator: ', accumulator)
+                    console.log(team, ' gf accumulator: ', accumulator)
                     console.log(team, ' goals for:', currVal)
 
-                    if(team === currVal.homeTeam && currVal.homeTeamScore > currVal.awayTeamScore) {
-                        return parseInt(accumulator.homeTeamScore) + parseInt(currVal.homeTeamScore)
+                    if(team === currVal.homeTeam && currVal.homeTeamScore >= currVal.awayTeamScore) {
+                        return parseInt(accumulator + currVal.homeTeamScore)
                     }
-                    if(team === currVal.awayTeam && currVal.awayTeamScore > currVal.homeTeamScore) {
-                        return parseInt(accumulator.awayTeamScore) + parseInt(currVal.awayTeamScore)
+                    else if(team === currVal.awayTeam && currVal.awayTeamScore >= currVal.homeTeamScore) {
+                        return parseInt(accumulator + currVal.awayTeamScore)
                     }
-                }, { homeTeamScore:0, awayTeamScore: 0 })
+
+                    return accumulator
+                }, 0)
                 console.log(team, ' goals for:', goalsFor)
 
                 // GA
                 let goalsAgainst = matchesList.reduce((accumulator, currVal) => {
+                    console.log(team, ' ga accumulator: ', accumulator)
                     console.log(team, ' goals against:', currVal)
 
-                    if(team === currVal.homeTeam && currVal.homeTeamScore < currVal.awayTeamScore) {
-                        return parseInt(accumulator.homeTeamScore) + parseInt(currVal.homeTeamScore)
+                    if(team === currVal.homeTeam && currVal.homeTeamScore <= currVal.awayTeamScore) {
+                        return parseInt(accumulator + currVal.homeTeamScore)
                     }
-                    if(team === currVal.awayTeam && currVal.awayTeamScore < currVal.homeTeamScore) {
-                        return parseInt(accumulator.awayTeamScore) + parseInt(currVal.awayTeamScore)
+                    else if(team === currVal.awayTeam && currVal.awayTeamScore <= currVal.homeTeamScore) {
+                        return parseInt(accumulator + currVal.awayTeamScore)
                     }
-                }, { homeTeamScore:0, awayTeamScore: 0 })
+
+                    return accumulator
+                }, 0)
                 console.log(team, ' goals against:', goalsAgainst)
 
                 // GD
@@ -164,6 +171,11 @@ class LeagueService {
         await axios.get(this.apiToken)
              .then(response => localStorage.setItem('league_auth_token', response.data.access_token)) 
         
+    }
+
+    async getAPIVersion(){
+        return axios.get(this.apiVersion)
+             .then(response => response.data.version) 
     }
 
     getAuthorizationToken(){

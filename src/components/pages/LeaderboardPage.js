@@ -14,25 +14,26 @@ class LeaderboardPage extends React.Component {
 		super(props)
      
         this.state = {
-            serviceData: [],
+            standings: [],
             flagUrl : '',
-            tableHeader : '',
-            teams : []
+            tableHeader : ''
         }
 	}
 
     componentDidMount = () => {
-
+        this.fetchFlagUrl()
+        this.fetchColumns()
+        this.fetchMatches()
     }
 
     fetchMatches = () => {
         const leagueService = new LeagueService()
 
         leagueService.setAuthorizationToken().then(() => {
-            leagueService.fetchData().then((response) => {
-                this.setState({ serviceData: response })
+            leagueService.fetchData().then(() => {
+                // Allow service to initialize arrays
             }).then(() => {
-                this.setState({ teams: leagueService.getTeams() })
+                this.setState({ standings: leagueService.getLeaderboard() })
             })
         })
     }
@@ -42,7 +43,7 @@ class LeaderboardPage extends React.Component {
 
     render = () => {
 
-        if(this.state.serviceData.length === 0) {
+        if(this.state.standings.length === 0) {
             return (
                 <Container className='pt-5 mx-10'>
                     <Row className='mb-5'>
@@ -55,7 +56,7 @@ class LeaderboardPage extends React.Component {
         return (
             <LeaderboardComponent 
                 data={{
-                    serviceData: this.state.serviceData,
+                    standings: this.state.standings,
                     tableHeader: this.state.tableHeader,
                     flagUrl: this.state.flagUrl
                 }}    

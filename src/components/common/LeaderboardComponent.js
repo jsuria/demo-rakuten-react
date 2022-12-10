@@ -27,19 +27,21 @@ const LeaderboardComponent = (props) => {
                         </thead>
                         <tbody>
                             {
-                                props.data.serviceData.map((row, index) =>
-                                    <tr key={index} style={{ height: '70px' }} className={ index % 2 === 0 ? 'bg-white' : 'bg-light' }
-                                    >
-                                        <td>
+                                props.data.standings.map((row, index) =>
+                                    <tr key={index} style={{ height: '70px' }} className='bg-white'>
+                                        <td className='align-middle'>
                                             <div className='container'>
                                                 <div className='row'>
-                                                    <div className='col-6 align-self-start'>
+                                                    <div className='col-lg-2 col-sm-4 align-self-center'>
                                                         <img 
-                                                        alt={row.awayTeam}
-                                                        style={{ width: '53px', height: '37px' }}
-                                                        src={props.data.flagUrl + row.awayTeam} />
+                                                        loading='lazy'
+                                                        alt={row.teamName}
+                                                        style={{ width: '53px', height: '37px', objectFit: 'cover' }}
+                                                        width="53"
+                                                        height="37"
+                                                        src={props.data.flagUrl + row.teamName} />
                                                     </div>
-                                                    <div className='col-6 text-start fs-5 fw-bold'>{ row.teamName }</div>
+                                                    <div className='col-lg-10 col-sm-6 align-self-center text-start fs-10 fw-bold'>{ row.teamName }</div>
                                                 </div>
                                             </div>
                                         </td>
