@@ -7,18 +7,18 @@ import Col from 'react-bootstrap/Col';
 const ScheduleComponent = (props) => {
 
     return (
-        <Container className='pt-5 mx-10'>
+        <Container className='mt-5 mx-10'>
             <Row className='mb-4'>
-                <Col className='text-center'><h4>League Schedule</h4></Col>
+                <Col className='mt-5 text-center fw-bold'><h3>League Schedule</h3></Col>
             </Row>
             <Row>
                 <Col>
-                    <Table striped>
-                        <thead>
+                    <Table>
+                        <thead className='bg-secondary bg-opacity-10'>
                             <tr>
                             {
                                 props.data.tableHeader.map((col, index) => 
-                                    <th key={index} >
+                                    <th className='fw-medium' key={index} >
                                         { col }
                                     </th>
                                 )
@@ -28,7 +28,8 @@ const ScheduleComponent = (props) => {
                         <tbody>
                             {
                                 props.data.serviceData.map((row, index) =>
-                                    <tr key={index} style={{ height: '70px' }}>
+                                    <tr key={index} style={{ height: '70px' }} className={ index % 2 === 0 ? 'bg-white' : 'bg-light' }
+                                    >
                                         <td className='align-middle'>{ new Date(row.matchDate).toUTCString() }</td>
                                         <td className='align-middle'>{ row.stadium }</td>
                                         <td className='align-middle'>
@@ -64,8 +65,6 @@ const ScheduleComponent = (props) => {
                                                     <div className='col-6 text-start fs-5 fw-bold'>{ row.awayTeam }</div>
                                                 </div>
                                             </div>
-                                            
-                                            
                                         </td>
                                     </tr>
                                 )
@@ -77,5 +76,4 @@ const ScheduleComponent = (props) => {
         </Container>
     )
 }
-
 export default ScheduleComponent

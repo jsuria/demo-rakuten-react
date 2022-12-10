@@ -73,7 +73,71 @@ class LeagueService {
      * 
      * @returns {Array} List of teams representing the leaderboard.
      */
-    getLeaderboard() {}
+    getLeaderboard() {
+         let standingsPerTeam = this.getTeams().map((team) => {
+                const matchesList = this.getMatches()
+                                    .filter(match => {
+                                        return match.homeTeam === team ||
+                                               match.awayTeam === team
+                                    })
+                // MP
+                let matchesPlayed = matchesList.length
+                
+                // GF
+                let goalsFor = matchesList.reduce((accumulator, currVal) => {
+                    console.log('accumulator: ', accumulator)
+                    console.log(team, ' goals for:', currVal)
+
+                    if(team === currVal.homeTeam && currVal.homeTeamScore > currVal.awayTeamScore) {
+                        return parseInt(accumulator.homeTeamScore) + parseInt(currVal.homeTeamScore)
+                    }
+                    if(team === currVal.awayTeam && currVal.awayTeamScore > currVal.homeTeamScore) {
+                        return parseInt(accumulator.awayTeamScore) + parseInt(currVal.awayTeamScore)
+                    }
+                }, { homeTeamScore:0, awayTeamScore: 0 })
+                console.log(team, ' goals for:', goalsFor)
+
+                // GA
+                let goalsAgainst = matchesList.reduce((accumulator, currVal) => {
+                    console.log(team, ' goals against:', currVal)
+
+                    if(team === currVal.homeTeam && currVal.homeTeamScore < currVal.awayTeamScore) {
+                        return parseInt(accumulator.homeTeamScore) + parseInt(currVal.homeTeamScore)
+                    }
+                    if(team === currVal.awayTeam && currVal.awayTeamScore < currVal.homeTeamScore) {
+                        return parseInt(accumulator.awayTeamScore) + parseInt(currVal.awayTeamScore)
+                    }
+                }, { homeTeamScore:0, awayTeamScore: 0 })
+                console.log(team, ' goals against:', goalsAgainst)
+
+                // GD
+                //let goalDifference = Math.abs(goalsFor - goalsAgainst)
+
+                // Get wins
+                let matchWins = matchesList.filter((match) => {
+                    return (team === match.homeTeam && match.homeTeamScore > match.awayTeamScore) ||
+                           (team === match.awayTeam && match.awayTeamScore > match.homeTeamScore)
+                }).length
+
+                // Get draws
+                let matchDraws = matchesList.filter((match) => {
+                    return (team === match.homeTeam && match.homeTeamScore === match.awayTeamScore) ||
+                           (team === match.awayTeam && match.awayTeamScore === match.homeTeamScore)
+                }).length
+
+                let totalPoints = (matchWins * 3) + (matchDraws * 1)
+
+                return {
+                    teamName: team,
+                    matchesPlayed: matchesPlayed,
+                    goalsFor: goalsFor,
+                    goalsAgainst: goalsAgainst,
+                    points: totalPoints
+                }
+         })
+
+         return standingsPerTeam
+    }
     
     getTeams() {
         let allTeams = this.matches.map((match) => [match.homeTeam, match.awayTeam])

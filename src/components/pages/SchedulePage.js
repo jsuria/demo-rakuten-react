@@ -35,6 +35,7 @@ class SchedulePage extends React.Component {
                 this.setState({ serviceData: response })
             }).then(() => {
                 this.setState({ teams: leagueService.getTeams() })
+                console.log('Leaderboard test: ', leagueService.getLeaderboard())
             })
         })
     }
